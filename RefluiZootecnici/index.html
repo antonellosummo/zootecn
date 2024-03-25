@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+        <title>Calcolatore volumi reflui di allevamento</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
+
+        <div class="loader"></div>
+<body>
+    <h1>Calcolatore volumi reflui di allevamento</h1>
+    <form>
+        <h2>Inserisci il numero medio annuo di capi presenti in stalla:</h2>
+        
+        <label for="num_capi_bovini_vacche_da_latte_fissa">Numero di capi bovini {vacche da latte (stab. fissa con paglia) P.V. kg 600}:</label>
+        <input type="number" id="num_capi_bovini_vacche_da_latte_fissa" name="num_capi_bovini_vacche_da_latte_fissa"><br><br>
+            
+        <label for="num_capi_bovini_vacche_da_latte_libera">Numero di capi bovini {vacche da latte (stab. libera + paglia, cuccette testa a testa) P.V. kg 600}:</label>
+        <input type="number" id="num_capi_bovini_vacche_da_latte_libera" name="num_capi_bovini_vacche_da_latte_libera"><br><br>
+        
+        <label for="num_capi_bovini_vacche_nutrici_fissa">Numero di capi bovini(vacche nutrici con lettiera 590 kg P.V.):</label>
+        <input type="number" id="num_capi_bovini_vacche_nutrici_fissa" name="num_capi_bovini_vacche_nutrici_fissa"><br><br>
+        
+        <label for="num_capi_bovini_vacche_nutrici_libera">Numero di capi bovini(vacche nutrici con paglia totale 590 kg P.V. ):</label>
+        <input type="number" id="num_capi_bovini_vacche_nutrici_libera" name="num_capi_bovini_vacche_nutrici_libera"><br><br>
+        
+        <label for="num_capi_bovini_vitelli">Numero di capi bovini(vitelli da 0 a 6 mesi - 100kg P.V.):</label>
+        <input type="number" id="num_capi_bovini_vitelli" name="num_capi_bovini_vitelli"><br><br>
+            
+                    <div class="container">
+        <label for="num_capi_ovicaprini_adulti">Numero di capi ovicaprini(capi adulti - 50kg P.V. recinti collettivi/individuali):</label>
+        <input type="number" id="num_capi_ovicaprini_adulti" name="num_capi_ovicaprini_adulti"><br><br>
+            
+        <label for="num_capi_ovicaprini_svezz">Numero di capi ovicaprini(capi da 0 a 3 mesi - 15kg P.V. recinti collettivi/individuali):</label>
+        <input type="number" id="num_capi_ovicaprini_svezz" name="num_capi_ovicaprini_svezz"><br><br>
+                    </div>
+        
+        <label for="num_capi_puledri">Numero di capi equini(puledri - 170kg P.V.):</label>
+        <input type="number" id="num_capi_puledri" name="num_capi_puledri"><br><br>
+                
+        <label for="num_capi_stalloni_fattrici">Numero di capi equini(stalloni o fattrici - 550kg P.V.):</label>
+        <input type="number" id="num_capi_stalloni_fattrici" name="num_capi_stalloni_fattrici"><br><br>
+          
+                    <div class="container">
+        <h2>Inserisci i dati dei terreni che desideri utilizzare per lo spandimento:</h2>
+        
+        
+        <label for="ettari_zvn">Ettari ricadenti in zone vulnerabili da nitrati (ZVN):</label>
+        <input type="number" id="ettari_zvn" name="ettari_zvn"><br><br>
+        <label for="ettari_zo">Ettari ricadenti in zona ordinaria (ZO):</label>
+        <input type="number" id="ettari_zo" name="ettari_zo"><br><br>
+                    </div>
+        
+       <div>
+        <div id="risultato">
+            <h2>Risultato:</h2>
+            <p id="volume_liquame">Il volume di LIQUAME prodotto è:</p>
+            <p id="volume_letame">Il volume di LETAME prodotto è:</p>
+            <p id="azoto">La quantità di azoto prodotta è:</p>
+            <div id="risultato_azoto_ettaro">
+            <h2>Azoto su ettaro:</h2>
+            <p id="ha_occorre_zvn">Ti occorrono in ZVN Ha:</p>
+            <p id="ha_occorre_zo">Ti occorrono in ZO Ha:</p>
+            <p id="azoto_spandibile_ettaro_zvn">Così spanderai in Zvn Azoto kg:</p>
+            <p id="azoto_spandibile_ettaro_zo">Così spanderai in Zvn Azoto kg:</p>
+        </div>
+            <div class="header">
+                    <button type="button" onclick="calcola()">calcola</button>
+            </div>
+        </form>
+    <script>
+            window.addEventListener("load", function(){
+            var loader = document.querySelector(".loader");
+            loader.style.display = "none";
+            });
+    </script>
+    <script>
+            function calcola() {
+            var num_capi_bovini_vacche_da_latte_fissa = document.getElementById("num_capi_bovini_vacche_da_latte_fissa").value;
+            var num_capi_bovini_vacche_da_latte_libera = document.getElementById("num_capi_bovini_vacche_da_latte_libera").value;
+            var num_capi_bovini_vacche_nutrici_fissa = document.getElementById("num_capi_bovini_vacche_nutrici_fissa").value;
+            var num_capi_bovini_vacche_nutrici_libera = document.getElementById("num_capi_bovini_vacche_nutrici_libera").value;
+            var num_capi_bovini_vitelli = document.getElementById("num_capi_bovini_vitelli").value;
+            var num_capi_ovicaprini_adulti = document.getElementById("num_capi_ovicaprini_adulti").value;
+            var num_capi_ovicaprini_svezz = document.getElementById("num_capi_ovicaprini_svezz").value;
+            var num_capi_puledri = document.getElementById("num_capi_puledri").value;
+            var num_capi_stalloni_fattrici = document.getElementById("num_capi_stalloni_fattrici").value;
+            
+
+            // Dati di produzione liquame dal dm 5046/2016
+            var liquame_bovini_vacche_da_latte_fissa= 5.4 * num_capi_bovini_vacche_da_latte_fissa;
+            var liquame_bovini_vacche_da_latte_libera= 7.8 * num_capi_bovini_vacche_da_latte_libera;
+            var liquame_bovini_vacche_da_nutrici_fissa= 0.9 * num_capi_bovini_vacche_nutrici_fissa;
+            var liquame_bovini_vacche_da_nutrici_libera= 0.9 * num_capi_bovini_vacche_nutrici_libera;
+            var liquame_bovini_vitelli= 0.9 * num_capi_bovini_vitelli;
+            var liquame_ovicaprini_adulti= 0.35 * num_capi_ovicaprini_adulti;
+            var liquame_ovicaprini_svezz= 0.10 * num_capi_ovicaprini_svezz;
+            var liquame_equini_puledri= 0.85 * num_capi_puledri;
+            var liquame_equini_stalloni_fattrici= 2.75 * num_capi_stalloni_fattrici;
+            
+            // Dati di produzione letame dal dm 5046/2016
+            var letame_bovini_vacche_da_latte_fissa= 20.88 * num_capi_bovini_vacche_da_latte_fissa;
+            var letame_bovini_vacche_da_latte_libera= 15.78 * num_capi_bovini_vacche_da_latte_libera;
+            var letame_bovini_vacche_da_nutrici_fissa= 13.86 * num_capi_bovini_vacche_nutrici_fissa;
+            var letame_bovini_vacche_da_nutrici_libera= 12.68 * num_capi_bovini_vacche_nutrici_libera;
+            var letame_bovini_vitelli= 2.4 * num_capi_bovini_vitelli;
+            var letame_ovicaprini_adulti= 1.22 * num_capi_ovicaprini_adulti;
+            var letame_ovicaprini_svezz= 0.36 * num_capi_ovicaprini_svezz;
+            var letame_equini_puledri= 4.15 * num_capi_puledri;
+            var letame_equini_stalloni_fattrici= 13.4 * num_capi_stalloni_fattrici;
+            
+            //liquame totale
+            var liquame_totale = (liquame_bovini_vacche_da_latte_fissa + liquame_bovini_vacche_da_latte_libera + liquame_bovini_vacche_da_nutrici_fissa + liquame_bovini_vacche_da_nutrici_libera + liquame_bovini_vitelli + liquame_ovicaprini_adulti + liquame_ovicaprini_svezz + liquame_equini_puledri + liquame_equini_stalloni_fattrici).toFixed(2);
+            
+            //letame totale
+            var letame_totale = (letame_bovini_vacche_da_latte_fissa + letame_bovini_vacche_da_latte_libera + letame_bovini_vacche_da_nutrici_fissa + letame_bovini_vacche_da_nutrici_libera + letame_bovini_vitelli + letame_ovicaprini_adulti + letame_ovicaprini_svezz + letame_equini_puledri + letame_equini_stalloni_fattrici).toFixed(2);
+            
+            //azoto bovini
+            var azoto_bovini_vacche_latte_fissa = 83 * num_capi_bovini_vacche_da_latte_fissa;
+            var azoto_bovini_vacche_latte_libera = 83 * num_capi_bovini_vacche_da_latte_libera;
+            var azoto_bovini_vacche_nutrici_fissa = 44 * num_capi_bovini_vacche_nutrici_fissa;
+            var azoto_bovini_vacche_nutrici_libera = 44 * num_capi_bovini_vacche_nutrici_libera;
+            var azoto_bovini_vitelli = 8.6 * num_capi_bovini_vitelli;
+            //azoto ovicaprini
+            var azoto_ovicaprini_adulti = 5 * num_capi_ovicaprini_adulti;
+            var azoto_ovicaprini_svezz = 1.48 * num_capi_ovicaprini_svezz;
+            //azoto equini
+            var azoto_puledri = 11.73 * num_capi_puledri;
+            var azoto_stalloni_fattrici = 37.95 * num_capi_stalloni_fattrici;
+            //aggiungi suini
+            
+            //azoto totale delle specie
+            var azoto_totale = (azoto_bovini_vacche_latte_fissa + azoto_bovini_vacche_latte_libera + azoto_bovini_vacche_nutrici_libera + azoto_bovini_vacche_nutrici_fissa + azoto_bovini_vitelli + azoto_ovicaprini_adulti + azoto_ovicaprini_svezz + azoto_stalloni_fattrici + azoto_puledri).toFixed(2);
+            
+            //superfici
+            var ettari_zvn = document.getElementById("ettari_zvn").value;
+            var ettari_zo = document.getElementById("ettari_zo").value;
+            
+            
+            var servono_ettari_zvn = (azoto_totale / 170).toFixed(1);
+            var servono_ettari_zo = (azoto_totale / 340).toFixed(1);
+            var spanderai_zvn = (azoto_totale / ettari_zvn).toFixed(1);
+            var spanderai_zo = (azoto_totale / ettari_zo).toFixed(1);
+            
+            
+            // Aggiorniamo il contenuto delle p
+            document.getElementById("volume_liquame").innerHTML = "Il volume di Liquame prodotto è: " + liquame_totale + " m³/anno";
+            document.getElementById("volume_letame").innerHTML = "Il volume di Letame prodotto è: " + letame_totale + " m³/anno";
+            document.getElementById("azoto").innerHTML = "La quantità di azoto totale prodotta è: " + azoto_totale + " kg/anno";
+            document.getElementById("ha_occorre_zvn").innerHTML = "Ti occorrono in ZVN " + servono_ettari_zvn + " Ha";
+            document.getElementById("ha_occorre_zo").innerHTML = "Ti occorrono in ZO " + servono_ettari_zo + " Ha";
+            document.getElementById("azoto_spandibile_ettaro_zvn").innerHTML = "Così spanderai ad Ha " + spanderai_zvn + " kg in ZVN   ------> puoi spandere 170kgN/ha";
+            document.getElementById("azoto_spandibile_ettaro_zo").innerHTML = "Così spanderai ad Ha " + spanderai_zo + " kg in ZO   ------> puoi spandere 340kgN/ha";
+
+            }
+        
+       
+    </script>
+    <footer>
+        <div class="logo">
+            <img url="country_logo.png" alt="Logo">
+          </div>
+      <p>Creato da Antonello Summo &copy; 2023  - Tutti i diritti riservati. Si declina ogni responsabilità per l'accuratezza dei dati presentati</p>
+    
+    </footer>
+    
+    
+</body>
+</html>
+
